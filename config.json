@@ -1,0 +1,16 @@
+{
+    "twitterName" : "YOUR_TWITTER_USER",
+    "interests": [
+        "your interests",
+        "can",
+        "be",
+        "listed",
+        "here"
+    ],
+    "twitterAccess": {
+        "consumerKey": "TWITTER_API_CONSUMER_KEY",
+        "consumerSecret": "TWITTER_CONSUMER_SECRET",
+        "accessToken": "TWITTER_ACCESS_TOKEN",
+        "accessSecret": "ACCESS_SECRET"
+    }
+}
