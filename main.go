@@ -17,9 +17,9 @@ var config Config
 
 // Parses flags and reads the configuration file.
 func init() {
-	flag.BoolVar(&clean, "clean", false, "If should cleanup all follows")
+	flag.BoolVar(&clean, "clean", false, "Cleans all previous follows from the bot")
 	flag.BoolVar(&unfollowAll, "deleteAll", false, "Unfollows all your friends")
-	flag.IntVar(&followHours, "followHours", 6, "Hours to follow users")
+	flag.IntVar(&followHours, "followHours", 6, "How many hours to follow users")
 	flag.IntVar(&sleepTime, "sleepTime", 15, "Time in minutes to sleep between each circle")
 	flag.Parse()
 

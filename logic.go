@@ -75,14 +75,15 @@ func unfollowAllFromUserAndExit(twitterName string) {
 	} else {
 		for index, element := range users {
 			unfollow(element)
+			// If more than 20 friends were to be returned for some reason
 			if index != 0 && index%25 == 0 {
-				log.Printf("Sleeping for 10 min to prevent spam")
-				time.Sleep(10 * time.Minute)
+				log.Printf("Sleeping for %d min to prevent spam", sleepTime)
+				time.Sleep(time.Duration(sleepTime) * time.Minute)
 			}
 			log.Printf("[%d] Unfollowed: %s", index, element)
 		}
-		log.Printf("Sleeping for 20 min to prevent spam")
-		time.Sleep(10 * time.Minute)
+		log.Printf("Sleeping for %d min to prevent spam", sleepTime)
+		time.Sleep(time.Duration(sleepTime) * time.Minute)
 		unfollowAllFromUserAndExit(twitterName)
 	}
 }
