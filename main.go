@@ -12,7 +12,7 @@ import (
 )
 
 var clean, unfollowAll bool
-var followHours, sleepTime int
+var followHours, sleepTime, opsBeforeSleep int
 var config Config
 
 // Parses flags and reads the configuration file.
@@ -21,6 +21,7 @@ func init() {
 	flag.BoolVar(&unfollowAll, "unfollowAll", false, "Unfollows all your friends")
 	flag.IntVar(&followHours, "followHours", 6, "How many hours to follow users")
 	flag.IntVar(&sleepTime, "sleepTime", 15, "Time in minutes to sleep between each circle")
+	flag.IntVar(&opsBeforeSleep, "opsBeforeSleep", 10, "Number of operations before sleeping")
 	flag.Parse()
 
 	filePath := "./config.json"

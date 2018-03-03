@@ -40,7 +40,7 @@ func cleanFollowListAndExit(userEntities []UserEntity) {
 	log.Printf("Unfollowing all followed users in list")
 	for index, element := range userEntities {
 		unfollow(element.ScreenName)
-		if index != 0 && index%19 == 0 {
+		if index != 0 && index%opsBeforeSleep == 0 {
 			log.Printf("Sleeping for %d min to prevent spam", sleepTime)
 			time.Sleep(time.Duration(sleepTime) * time.Minute)
 		}
@@ -61,7 +61,7 @@ func unfollowOldUsers(userEntities []UserEntity) {
 				unfollow(element.ScreenName)
 				userEntities = remove(userEntities, index)
 				log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
-				if index != 0 && index%19 == 0 {
+				if index != 0 && index%opsBeforeSleep == 0 {
 					log.Printf("Sleeping for %d min to prevent spam", sleepTime)
 					time.Sleep(time.Duration(sleepTime) * time.Minute)
 				}
@@ -84,7 +84,7 @@ func unfollowAllFromUserAndExit(twitterName string) {
 		for index, element := range users {
 			unfollow(element)
 			// If more than 20 friends were to be returned for some reason
-			if index != 0 && index%25 == 0 {
+			if index != 0 && index%opsBeforeSleep == 0 {
 				log.Printf("Sleeping for %d min to prevent spam", sleepTime)
 				time.Sleep(time.Duration(sleepTime) * time.Minute)
 			}
@@ -99,7 +99,7 @@ func unfollowAllFromUserAndExit(twitterName string) {
 // Follows all the users in the provided list of user entities.
 func followNewUsers(userEntities []UserEntity, userIDsFollowed map[int64]bool) []UserEntity {
 	log.Printf("\nSearching for new users to follow")
-	users := searchTweets(randomElementFromSlice(config.Interests), 10)
+	users := searchTweets(randomElementFromSlice(config.Interests), opsBeforeSleep)
 	for index, element := range users {
 		if !userIDsFollowed[element.UserID] {
 			userEntities = append(userEntities, UserEntity{
