@@ -8,7 +8,7 @@ It is quite a toxic behavior, but it is an efficient way to get new followers if
 ## Getting started
 There are many ways to get started, you could clone the project (and install Golang on your computer if you don't have it already) and then simply compile the code by executing the command `go build` in the directory which will give you an executable file.
 
-I have also uploaded a couple of different executables compiled for the most popular platforms which can be found here:
+I have also uploaded a couple of different executables compiled for the most popular platforms which can be found here: https://snieking-owncloud.cloud.seedboxes.cc/index.php/s/JGeOtiFntelfi5I
 
 ### Configuring the bot
 Modify/Create `config.json` file. An example file can be found in this repository. Fill in your details, and make sure that you pick up Twitter API keys from https://apps.twitter.com and enter those into the config file. DO NOT SHARE your API keys with anyone.
