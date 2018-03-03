@@ -46,6 +46,8 @@ func cleanFollowListAndExit(userEntities []UserEntity) {
 		}
 		log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
 	}
+
+	writeListOfFollowsToFile([]UserEntity{})
 	os.Exit(3)
 }
 
