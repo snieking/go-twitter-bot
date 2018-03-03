@@ -41,8 +41,8 @@ func cleanFollowListAndExit(userEntities []UserEntity) {
 	for index, element := range userEntities {
 		unfollow(element.ScreenName)
 		if index != 0 && index%19 == 0 {
-			log.Printf("Sleeping for 10 min to prevent spam")
-			time.Sleep(15 * time.Minute)
+			log.Printf("Sleeping for %d min to prevent spam", sleepTime)
+			time.Sleep(time.Duration(sleepTime) * time.Minute)
 		}
 		log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
 	}
@@ -61,6 +61,10 @@ func unfollowOldUsers(userEntities []UserEntity) {
 				unfollow(element.ScreenName)
 				userEntities = remove(userEntities, index)
 				log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
+				if index != 0 && index%19 == 0 {
+					log.Printf("Sleeping for %d min to prevent spam", sleepTime)
+					time.Sleep(time.Duration(sleepTime) * time.Minute)
+				}
 			}
 		} else {
 			log.Printf("[%d] user %s isn't due for unfollow yet", index, element.ScreenName)
