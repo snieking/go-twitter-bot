@@ -20,5 +20,5 @@ You start the bot by simply executing the binary. For example: `./go-twitter-bot
 The twitter bot supports three different running modes and you can also configure some default values. This is done by providing some extra program arguments. Execute `./go-twitter-bot.exe -h` for details. 
 
 `-clean` will clear all previous followed users.
-`-deleteAll` will unfollow all users that your account follows (USE WITH CAUTION).
+`-unfollowAll` will unfollow all users that your account follows (USE WITH CAUTION).
 
