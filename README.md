@@ -5,6 +5,8 @@ The twitter bot will search for users tweeting about configurable topics and giv
 
 It is quite a toxic behavior, but it is an efficient way to get new followers if you don't mind that.
 
+**For more details, please see https://thecuriousdev.org/golang-twitter-bot/**
+
 **DISCLAIMER!** If you use the bot it's at your own risk. I am not responsible if Twitter would decide to take some action against you. With that in mind, the bots default values prevents spam and most likely you will be fine.
 
 ## Getting started
