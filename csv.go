@@ -15,6 +15,7 @@ func readFromFile(filePath string) []UserEntity {
 	if err != nil {
 		csvFile, _ = os.Create(filePath)
 	}
+	defer csvFile.Close()
 
 	reader := csv.NewReader(bufio.NewReader(csvFile))
 	var userEntities []UserEntity
@@ -33,4 +34,22 @@ func readFromFile(filePath string) []UserEntity {
 	}
 
 	return userEntities
+}
+
+// Writes the list of user entities to file in order to keep track of
+// who to later unfollow and at what time.
+func writeListOfFollowsToFile(userEntities []UserEntity) {
+	file, err := os.Create("follows.csv")
+	checkError("Cannot create file\n", err)
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+	for _, value := range userEntities {
+		timestamp := strconv.FormatInt(value.FollowedTimestamp, 10)
+		strWrite := []string{value.ScreenName, timestamp}
+		err := writer.Write(strWrite)
+		writer.Flush()
+		checkError("Cannot write to file", err)
+	}
 }
