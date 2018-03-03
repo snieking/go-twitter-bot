@@ -4,6 +4,7 @@ package main
 import (
 	"log"
 	"math/rand"
+	"os"
 	"time"
 )
 
@@ -63,4 +64,10 @@ func randomElementFromSlice(s []string) string {
 func randomNumberInRange(min, max int) int {
 	rand.Seed(time.Now().Unix())
 	return rand.Intn(max-min) + min
+}
+
+// Returns the path to the base directory appended with the filename.
+func getPath(filename string) string {
+	pwd, _ := os.Getwd()
+	return pwd + string(os.PathSeparator) + filename
 }

@@ -24,7 +24,7 @@ func init() {
 	flag.IntVar(&opsBeforeSleep, "opsBeforeSleep", 10, "Number of operations before sleeping")
 	flag.Parse()
 
-	filePath := "./config.json"
+	filePath := getPath("config.json")
 
 	file, err1 := ioutil.ReadFile(filePath)
 	if err1 != nil {
