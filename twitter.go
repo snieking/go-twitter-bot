@@ -52,9 +52,9 @@ func listFollows(user string) []string {
 	return users
 }
 
-// Search for tweets based on a provided topic and returns as many as it can find
-// up to the provided limit.
-func searchTweets(value string, limit int) []string {
+// Search for tweets based on a provided topic and returns as many users
+// who wrote tweets as it can find based on the provided topic and limit
+func searchTweets(value string, limit int) []UserEntity {
 	search, _, err := client.Search.Tweets(&twitter.SearchTweetParams{
 		Query: value,
 		Count: limit,
@@ -62,14 +62,29 @@ func searchTweets(value string, limit int) []string {
 
 	checkError("Failed to search for tweets\n", err)
 
-	var users []string
+	var users []UserEntity
 	for _, element := range search.Statuses {
 		if element.Lang == "en" {
-			users = append(users, element.User.ScreenName)
+			users = append(users, UserEntity{
+				ScreenName: element.User.ScreenName,
+				UserID:     element.User.ID,
+			})
 		}
 	}
 
 	return users
+}
+
+// Gets information of who a user follows.
+// Returns a map where the key is the ID for easier and quicker lookup.
+func getMapOfFollowedUsers(user string) map[int64]bool {
+	friends, _, err := client.Friends.IDs(&twitter.FriendIDParams{ScreenName: user})
+	checkError("Failed to fetch followed users\n", err)
+	m := make(map[int64]bool)
+	for _, element := range friends.IDs {
+		m[element] = true
+	}
+	return m
 }
 
 // Config holds configuration from the user
@@ -85,4 +100,11 @@ type TwitterAccess struct {
 	ConsumerSecret string
 	AccessToken    string
 	AccessSecret   string
+}
+
+// UserEntity holds data for a user that we followed
+type UserEntity struct {
+	ScreenName        string `json:"screenName"`
+	UserID            int64  `json:"userID"`
+	FollowedTimestamp int64  `json:"followedTimestamp"`
 }

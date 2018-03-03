@@ -27,7 +27,8 @@ func startBot() {
 		}
 
 		unfollowOldUsers(followEntries)
-		followEntries = followNewUsers(followEntries)
+		userIDsFollowed := getMapOfFollowedUsers(config.TwitterName)
+		followEntries = followNewUsers(followEntries, userIDsFollowed)
 		writeListOfFollowsToFile(followEntries)
 
 		log.Printf("Done with follow/unfollow, sleeping for %d minutes", sleepTime)
@@ -35,11 +36,11 @@ func startBot() {
 	}
 }
 
-// Cleans the provided list of follow entries, meaning that all of them
+// Cleans the provided list of user entities, meaning that all of them
 // will be unfollowed.
-func cleanFollowListAndExit(followEntries []FollowEntry) {
+func cleanFollowListAndExit(userEntities []UserEntity) {
 	log.Printf("Unfollowing all followed users in list")
-	for index, element := range followEntries {
+	for index, element := range userEntities {
 		unfollow(element.ScreenName)
 		if index != 0 && index%19 == 0 {
 			log.Printf("Sleeping for 10 min to prevent spam")
@@ -52,12 +53,12 @@ func cleanFollowListAndExit(followEntries []FollowEntry) {
 
 // Unfollows previous users that we followed.
 // Users are considered old if they are older than the configured hours.
-func unfollowOldUsers(followEntries []FollowEntry) {
+func unfollowOldUsers(userEntities []UserEntity) {
 	log.Printf("Checking if anyone needs to be unfollowed")
-	for index, element := range followEntries {
-		if element.Timestamp < makeTimestampHoursBeforeNow(followHours) {
+	for index, element := range userEntities {
+		if element.FollowedTimestamp < makeTimestampHoursBeforeNow(followHours) {
 			unfollow(element.ScreenName)
-			followEntries = remove(followEntries, index)
+			userEntities = remove(userEntities, index)
 			log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
 		} else {
 			log.Printf("[%d] user %s isn't due for unfollow yet", index, element.ScreenName)
@@ -70,6 +71,7 @@ func unfollowOldUsers(followEntries []FollowEntry) {
 func unfollowAllFromUserAndExit(twitterName string) {
 	users := listFollows(twitterName)
 	if len(users) < 1 {
+		log.Printf("User %s doesn't follow any more users. Exiting because work is done.", twitterName)
 		os.Create("follows.csv")
 		os.Exit(3)
 	} else {
@@ -88,33 +90,37 @@ func unfollowAllFromUserAndExit(twitterName string) {
 	}
 }
 
-// Follows all the users in the provided list of follow entries.
-func followNewUsers(followEntries []FollowEntry) []FollowEntry {
+// Follows all the users in the provided list of user entities.
+func followNewUsers(userEntities []UserEntity, userIDsFollowed map[int64]bool) []UserEntity {
 	log.Printf("\nSearching for new users to follow")
 	users := searchTweets(randomElementFromSlice(config.Interests), 10)
 	for index, element := range users {
-		followEntries = append(followEntries, FollowEntry{
-			ScreenName: element,
-			Timestamp:  makeTimestamp(),
-		})
-		follow(element)
-		log.Printf("[%d] followed: %s", index, element)
+		if !userIDsFollowed[element.UserID] {
+			userEntities = append(userEntities, UserEntity{
+				ScreenName:        element.ScreenName,
+				FollowedTimestamp: makeTimestamp(),
+			})
+			follow(element.ScreenName)
+			log.Printf("[%d] followed: %s", index, element.ScreenName)
+		} else {
+			log.Printf("User %s is already followed, skipping that user", element.ScreenName)
+		}
 	}
 
-	return followEntries
+	return userEntities
 }
 
-// Writes the list of follow entries to file in order to keep track of
+// Writes the list of user entities to file in order to keep track of
 // who to later unfollow and at what time.
-func writeListOfFollowsToFile(followEntries []FollowEntry) {
+func writeListOfFollowsToFile(userEntities []UserEntity) {
 	file, err := os.Create("follows.csv")
 	checkError("Cannot create file\n", err)
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
-	for _, value := range followEntries {
-		timestamp := strconv.FormatInt(value.Timestamp, 10)
+	for _, value := range userEntities {
+		timestamp := strconv.FormatInt(value.FollowedTimestamp, 10)
 		strWrite := []string{value.ScreenName, timestamp}
 		err := writer.Write(strWrite)
 		writer.Flush()

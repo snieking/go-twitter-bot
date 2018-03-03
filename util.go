@@ -38,10 +38,10 @@ func checkError(message string, err error) {
 	}
 }
 
-// Removes the FollowEntry with the provided index from the slice.
+// Removes the UserEntity with the provided index from the slice.
 // It doesn't retain the order as the last element will be put at
 // the index of the removed element.
-func remove(s []FollowEntry, i int) []FollowEntry {
+func remove(s []UserEntity, i int) []UserEntity {
 	s[len(s)-1], s[i] = s[i], s[len(s)-1]
 	return s[:len(s)-1]
 }

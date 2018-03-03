@@ -8,8 +8,8 @@ import (
 	"strconv"
 )
 
-// Reads from a csv file and returns a slice of FollowEntries
-func readFromFile(filePath string) []FollowEntry {
+// Reads from a csv file and returns a slice of UserEntities
+func readFromFile(filePath string) []UserEntity {
 	csvFile, err := os.Open(filePath)
 
 	if err != nil {
@@ -17,7 +17,7 @@ func readFromFile(filePath string) []FollowEntry {
 	}
 
 	reader := csv.NewReader(bufio.NewReader(csvFile))
-	var followEntries []FollowEntry
+	var userEntities []UserEntity
 
 	for {
 		line, err := reader.Read()
@@ -26,11 +26,11 @@ func readFromFile(filePath string) []FollowEntry {
 		}
 		checkError("Failed to read lines in file\n", err)
 		i, _ := strconv.ParseInt(line[1], 10, 64)
-		followEntries = append(followEntries, FollowEntry{
-			ScreenName: line[0],
-			Timestamp:  i,
+		userEntities = append(userEntities, UserEntity{
+			ScreenName:        line[0],
+			FollowedTimestamp: i,
 		})
 	}
 
-	return followEntries
+	return userEntities
 }
