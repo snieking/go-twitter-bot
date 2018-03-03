@@ -5,7 +5,6 @@ package main
 
 import "github.com/dghubble/go-twitter/twitter"
 import "github.com/dghubble/oauth1"
-import "log"
 
 var client twitter.Client
 
@@ -28,9 +27,7 @@ func follow(user string) {
 		ScreenName: user,
 		Follow:     newTrue(),
 	})
-	if err != nil {
-		log.Println(err)
-	}
+	logError(err)
 }
 
 // Unfollows a provided user.

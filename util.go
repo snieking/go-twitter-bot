@@ -38,6 +38,13 @@ func checkError(message string, err error) {
 	}
 }
 
+// Simply logs the error if it occurred.
+func logError(err error) {
+	if err != nil {
+		log.Println(err)
+	}
+}
+
 // Removes the UserEntity with the provided index from the slice.
 // It doesn't retain the order as the last element will be put at
 // the index of the removed element.
