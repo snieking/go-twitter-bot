@@ -55,9 +55,13 @@ func unfollowOldUsers(userEntities []UserEntity) {
 	log.Printf("Checking if anyone needs to be unfollowed")
 	for index, element := range userEntities {
 		if element.FollowedTimestamp < makeTimestampHoursBeforeNow(followHours) {
-			unfollow(element.ScreenName)
-			userEntities = remove(userEntities, index)
-			log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
+			// To prevent index out of range since we modify the list in remove
+			// We will catch the element on the next iteration instead.
+			if len(userEntities) >= index {
+				unfollow(element.ScreenName)
+				userEntities = remove(userEntities, index)
+				log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
+			}
 		} else {
 			log.Printf("[%d] user %s isn't due for unfollow yet", index, element.ScreenName)
 		}
