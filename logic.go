@@ -57,7 +57,7 @@ func unfollowOldUsers(userEntities []UserEntity) {
 		if element.FollowedTimestamp < makeTimestampHoursBeforeNow(followHours) {
 			// To prevent index out of range since we modify the list in remove
 			// We will catch the element on the next iteration instead.
-			if len(userEntities) >= index {
+			if len(userEntities) > index {
 				unfollow(element.ScreenName)
 				userEntities = remove(userEntities, index)
 				log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
