@@ -4,7 +4,6 @@ package main
 import (
 	"log"
 	"os"
-	"time"
 )
 
 // Starts the bot, creating the twitter connection as well as performing
@@ -28,9 +27,6 @@ func startBot() {
 		userIDsFollowed := getMapOfFollowedUsers(config.TwitterName)
 		followEntries = followNewUsers(followEntries, userIDsFollowed)
 		writeListOfFollowsToFile(followEntries)
-
-		log.Printf("Done with follow/unfollow, sleeping for %d minutes", sleepTime)
-		time.Sleep(time.Duration(sleepTime) * time.Minute)
 	}
 }
 
@@ -40,10 +36,6 @@ func cleanFollowListAndExit(userEntities []UserEntity) {
 	log.Printf("Unfollowing all followed users in list")
 	for index, element := range userEntities {
 		unfollow(element.ScreenName)
-		if index != 0 && index%opsBeforeSleep == 0 {
-			log.Printf("Sleeping for %d min to prevent spam", sleepTime)
-			time.Sleep(time.Duration(sleepTime) * time.Minute)
-		}
 		log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
 	}
 
@@ -57,16 +49,10 @@ func unfollowOldUsers(userEntities []UserEntity) {
 	log.Printf("Checking if anyone needs to be unfollowed")
 	for index, element := range userEntities {
 		if element.FollowedTimestamp < makeTimestampHoursBeforeNow(followHours) {
-			// To prevent index out of range since we modify the list in remove
-			// We will catch the element on the next iteration instead.
 			if len(userEntities) > index {
 				unfollow(element.ScreenName)
 				userEntities = remove(userEntities, index)
 				log.Printf("[%d] Unfollowed: %s", index, element.ScreenName)
-				if index != 0 && index%opsBeforeSleep == 0 {
-					log.Printf("Sleeping for %d min to prevent spam", sleepTime)
-					time.Sleep(time.Duration(sleepTime) * time.Minute)
-				}
 			}
 		} else {
 			log.Printf("[%d] user %s isn't due for unfollow yet", index, element.ScreenName)
@@ -85,15 +71,9 @@ func unfollowAllFromUserAndExit(twitterName string) {
 	} else {
 		for index, element := range users {
 			unfollow(element)
-			// If more than 20 friends were to be returned for some reason
-			if index != 0 && index%opsBeforeSleep == 0 {
-				log.Printf("Sleeping for %d min to prevent spam", sleepTime)
-				time.Sleep(time.Duration(sleepTime) * time.Minute)
-			}
 			log.Printf("[%d] Unfollowed: %s", index, element)
 		}
-		log.Printf("Sleeping for %d min to prevent spam", sleepTime)
-		time.Sleep(time.Duration(sleepTime) * time.Minute)
+
 		unfollowAllFromUserAndExit(twitterName)
 	}
 }

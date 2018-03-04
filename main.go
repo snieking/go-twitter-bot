@@ -20,7 +20,7 @@ func init() {
 	flag.BoolVar(&clean, "clean", false, "Cleans all previous follows from the bot")
 	flag.BoolVar(&unfollowAll, "unfollowAll", false, "Unfollows all your friends")
 	flag.IntVar(&followHours, "followHours", 6, "How many hours to follow users")
-	flag.IntVar(&sleepTime, "sleepTime", 15, "Time in minutes to sleep between each circle")
+	flag.IntVar(&sleepTime, "sleepTime", 20, "Time in minutes to sleep between each circle")
 	flag.IntVar(&opsBeforeSleep, "opsBeforeSleep", 10, "Number of operations before sleeping")
 	flag.Parse()
 
