@@ -141,6 +141,8 @@ type UserEntity struct {
 	FollowedTimestamp int64  `json:"followedTimestamp"`
 }
 
+// LimitTracker tracks the limitations of the Twitter API
+// so that we do not exhaust our resources.
 type LimitTracker struct {
 	Operations    int
 	WindowStarted time.Time

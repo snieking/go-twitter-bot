@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"encoding/csv"
 	"io"
 	"os"
@@ -17,7 +16,7 @@ func readFromFile(filePath string) []UserEntity {
 	}
 	defer csvFile.Close()
 
-	reader := csv.NewReader(bufio.NewReader(csvFile))
+	reader := csv.NewReader(csvFile)
 	var userEntities []UserEntity
 
 	for {
